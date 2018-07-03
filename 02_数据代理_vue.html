@@ -6,6 +6,21 @@
 </head>
 <body>
 
+<div id="test"></div>
 
+<script type="text/javascript" src="./js/vue.js"></script>
+<script type="text/javascript">
+  const vm = new Vue({
+    el: '#test',
+    data: {
+      name: 'DAMU'
+    }
+  })
+
+  console.log(vm)
+  console.log(vm.name) // 读取vm中data的name属性值   // 代理读
+  vm.name = 'SADAMU'
+  console.log(vm._data.name)  // 数据保存到vm中的data的name属性上  // 代理写
+</script>
 </body>
 </html>
