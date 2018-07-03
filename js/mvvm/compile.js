@@ -68,22 +68,31 @@ Compile.prototype = {
   },
 
   compile: function (node) {
+    // 得到所有属性节点
     var nodeAttrs = node.attributes,
+      // 保存编译对象
       me = this;
-
+    // 遍历所有属性
     [].slice.call(nodeAttrs).forEach(function (attr) {
+      // 得到属性名: v-on:click
       var attrName = attr.name;
+      // 如果是指令属性
       if (me.isDirective(attrName)) {
+        // 得到属性值(表达式): show
         var exp = attr.value;
+        // 得到指令名: on:click
         var dir = attrName.substring(2);
-        // 事件指令
+        // 如果是事件指令
         if (me.isEventDirective(dir)) {
+          // 进行事件指令编译
           compileUtil.eventHandler(node, me.$vm, exp, dir);
-          // 普通指令
+          // 如果是普通指令
         } else {
+          // 得到指令对应的编译工具函数进行执行编译: text/html/class
           compileUtil[dir] && compileUtil[dir](node, me.$vm, exp);
         }
 
+        // 移除指令属性
         node.removeAttribute(attrName);
       }
     });
@@ -166,12 +175,18 @@ var compileUtil = {
     });
   },
 
-  // 事件处理
+  /*
+  exp: 表达式(show)
+  dir: 指令名(on:click)
+   */
   eventHandler: function (node, vm, exp, dir) {
+    // 得到事件名/类型: click
     var eventType = dir.split(':')[1],
+      // 根据表达式从methods配置中取出对应的函数
       fn = vm.$options.methods && vm.$options.methods[exp];
-
+    // 如果都存在
     if (eventType && fn) {
+      // 给节点绑定指定事件名和回调函数(强制绑定this为vm)的dom事件监听
       node.addEventListener(eventType, fn.bind(vm), false);
     }
   },
@@ -215,11 +230,7 @@ var updater = {
   // 更新节点的className属性
   classUpdater: function (node, value, oldValue) {
     var className = node.className;
-    className = className.replace(oldValue, '').replace(/\s$/, '');
-
-    var space = className && String(value) ? ' ' : '';
-
-    node.className = className + space + value;
+    node.className = (className ? className+' ' : '') + value;
   },
 
   // 更新节点的value属性
