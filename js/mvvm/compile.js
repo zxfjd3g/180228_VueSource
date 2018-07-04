@@ -135,17 +135,22 @@ var compileUtil = {
 
   // 编译v-model的工具函数
   model: function (node, vm, exp) {
+    // 实现初始化显示
     this.bind(node, vm, exp, 'model');
 
     var me = this,
+      // 得到表达式的值
       val = this._getVMVal(vm, exp);
-    node.addEventListener('input', function (e) {
+    // 给节点绑定input事件监听
+    node.addEventListener('input', function (e) { // 当输入改变时自动调用
+      // 得到输入框最新的值
       var newValue = e.target.value;
       if (val === newValue) {
         return;
       }
-
+      // 将最新值保存到表达式对应的data的某个属性上-->触发数据绑定的流程
       me._setVMVal(vm, exp, newValue);
+      // 保存最新的值
       val = newValue;
     });
   },
