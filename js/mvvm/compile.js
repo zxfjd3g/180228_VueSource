@@ -170,7 +170,9 @@ var compileUtil = {
     // 执行更新函数去更新节点, 实现初始化显示
     updaterFn && updaterFn(node, this._getVMVal(vm, exp));
 
+    // 创建与表达式对应的watcher对象, 用于更新界面节点
     new Watcher(vm, exp, function (value, oldValue) {
+      // 当data中数据发生变化时, 应该自动调用去更新界面
       updaterFn && updaterFn(node, value, oldValue);
     });
   },
